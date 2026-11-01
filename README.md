@@ -108,7 +108,7 @@ Metal is enabled automatically on Apple Silicon. For Vulkan (Linux/Windows):
 sudo apt install build-essential cmake libvulkan-dev glslc libopenblas-dev
 
 # Fedora
-sudo dnf install vulkan-headers openblas-devel glslc spirv-headers-devel vulkan-loader-devel
+sudo dnf install gcc-c++ cmake vulkan-headers vulkan-loader-devel glslc spirv-headers-devel openblas-devel
 
 cmake -B build -DTRANSCRIBE_VULKAN=ON
 cmake --build build
@@ -139,6 +139,8 @@ as the `rocm` backend kind, are picked up by the default `auto` backend, and can
 be required explicitly with `--backend rocm`.
 
 `libopenblas-dev` is optional but recommended. It accelerates the host-side decoder ~10-15x. Without it the build falls back to a scalar path automatically.
+
+On Fedora, `openblas-devel` installs `cblas.h` under `/usr/include/openblas`, which CMake does not search by default. Add `-DCMAKE_C_FLAGS="-I/usr/include/openblas" -DCMAKE_CXX_FLAGS="-I/usr/include/openblas"` to the `cmake -B build` command, otherwise the decoder silently uses the scalar path.
 
 tinyBLAS (Justine Tunney's `llamafile_sgemm` kernels) is on by default.
 
